@@ -1,0 +1,79 @@
+
+/* Sidebar start here  */
+.sidebar{
+    position: fixed;
+    background: #E6E6FA;
+    width: 400px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.sidebar h2{
+    text-align: center;
+    font-size: 19px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #000080 ;
+    padding: 20px;
+    font-weight: bold;
+	margin-top: 0px;
+}
+
+
+
+
+/* Sidebar end Here  */
+
+/* Main Content Section Start Here  */
+
+.main{
+    margin-left: 400px;
+    padding: 0px;
+}
+
+.main h3{
+    text-align: center;
+    font-size: 19px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #000080 ;
+    padding: 20px;
+
+    font-weight: bold;
+	margin-top: 0px;
+}
+navbar {
+  overflow: hidden;
+  background-color: #999;
+}
+
+
+#navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+
+.content {
+  padding: 16px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+
+.sticky + .content {
+  padding-top: 60px;
+}
+
+
+	</style>

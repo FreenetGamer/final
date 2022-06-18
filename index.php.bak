@@ -1,0 +1,384 @@
+  <?php   
+ session_start();  
+ $connect = mysqli_connect("localhost", "root", "", "final");  
+ if(isset($_POST["add_to_cart"]))  
+ {  
+  
+  
+      if(isset($_SESSION["shopping_cart"]))  
+      {  
+           $item_array_id = array_column($_SESSION["shopping_cart"], "item_id");  
+           if(!in_array($_GET["id"], $item_array_id))  
+           {  
+                $count = count($_SESSION["shopping_cart"]);  
+                $item_array = array(  
+                     'item_id'               =>     $_GET["id"],  
+                     'item_name'               =>     $_POST["hidden_name"],  
+                     'item_price'          =>     $_POST["hidden_price"],  
+                     'item_quantity'          =>     $_POST["quantity"],  
+                );  
+                $_SESSION["shopping_cart"][$count] = $item_array;
+
+
+				              $Price =     $_POST["hidden_price"];
+	                          $Product_Name = $_POST["hidden_name"];
+	                          $Quantity =  $_POST["quantity"] ; 
+					        $pid =  $_GET["id"] ;
+							$totala =  number_format($_POST["hidden_price"] * $_POST["quantity"], 2);
+	                    
+							    $query = " INSERT INTO `purchase`(`Product_Name`, `Quantity`, `Price`, `product_id` ,`total`,`validation`) VALUES ('$Product_Name','$Quantity','$Price','$pid','$totala','2')";
+							 $result = mysqli_query($connect, $query);  
+							 
+							 $mjl = "SELECT Quantity FROM product Where id='$pid'";  
+                             $results = mysqli_query($connect, $mjl);  
+				             $row = mysqli_fetch_array($results);
+							$mem = number_format($row["Quantity"] - $_POST["quantity"], 2);
+							
+							$aabb = "UPDATE `product` SET `Quantity`='$mem' WHERE id ='$pid'";
+							  mysqli_query($connect, $aabb);	
+           }  
+           else  
+           {  
+               
+               echo '<script>location:index.php"</script>';  
+           }  
+      }  
+      else  
+      {  
+           $item_array = array(  
+                'item_id'               =>     $_GET["id"],  
+                'item_name'               =>     $_POST["hidden_name"],  
+                'item_price'          =>     $_POST["hidden_price"],  
+                'item_quantity'          =>     $_POST["quantity"]  
+           );  
+           $_SESSION["shopping_cart"][0] = $item_array;
+           echo 'Already Added';		   
+      }  
+ }  
+ 
+ 
+ 
+ if(isset($_GET["action"]))  
+ {  
+
+ if($_GET["action"] == "save2")  
+      {  
+           foreach($_SESSION["shopping_cart"]as $keys)  
+           {  
+		   
+		   unset($_SESSION["shopping_cart"]); 
+             $query = "UPDATE purchase SET validation= 1 ";
+             mysqli_query($connect, $query);	
+
+ if($_GET["action"] == "save")  
+      {  
+           foreach($_SESSION["shopping_cart"]as $keys)  
+           {  
+		   
+		   unset($_SESSION["shopping_cart"]); 
+             $query = "UPDATE purchase SET validation= 2 ";
+             mysqli_query($connect, $query);	
+	  
+  header('location: index.php'); 
+				
+                
+           }  
+      }
+
+
+	  
+  header('location: index.php'); 
+				
+                
+           }  
+      }
+      if($_GET["action"] == "delete")  
+      {  
+           foreach($_SESSION["shopping_cart"] as $keys => $values)  
+           {  
+                if($values["item_id"] == $_GET["id"]) 
+
+					
+                {  
+			
+			$del = $values["item_id"];
+			$val = $values["item_name"];
+			$sql="SELECT validation FROM `purchase` WHERE Product_id='$del'";
+		$results=mysqli_query($connect,$sql);  
+		$row=mysqli_fetch_assoc($results);
+		
+					
+		 
+try {
+    // run your code here
+	if($row){
+		 if ($row['validation'] = 2){
+			 
+			 $query = "DELETE FROM `purchase` WHERE validation =2 and Product_id = '$del'";
+
+             $result = mysqli_query($connect, $query);
+			 
+                     unset($_SESSION["shopping_cart"][$keys]); 
+					
+					// header('location: index111.php'); 
+					 
+					 
+					 }else{ unset($_SESSION["shopping_cart"][$keys]); };
+			
+					 
+		 };
+                   
+				
+}
+catch (exception $e) {
+    //code to handle the exception
+	echo 'error';
+}
+		
+
+				
+                }  
+           }  
+      }
+  
+ }
+ ?>  
+ <!DOCTYPE html>  
+ <html>  
+      <head>  
+           <title>Counter</title>  
+       
+            <link rel="stylesheet" href="portal/css/c.css">
+         
+  	   
+      </head>  
+      <body>  
+	    <div class="wrapper">
+        <!-- Sidebar  -->
+       <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+	
+    
+
+	<style>
+	/* colors
+ #151A21; light 
+ #512DA8 ; dark
+*/
+
+/* reset */
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body{
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar start here  */
+.sidebar{
+    position: fixed;
+    background: #E6E6FA;
+    width: 400px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.sidebar h2{
+    text-align: center;
+    font-size: 19px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #000080 ;
+    padding: 20px;
+    font-weight: bold;
+	margin-top: 0px;
+}
+
+
+
+
+/* Sidebar end Here  */
+
+/* Main Content Section Start Here  */
+
+.main{
+    margin-left: 400px;
+    padding: 0px;
+}
+
+.main h3{
+    text-align: center;
+    font-size: 19px;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: #000080 ;
+    padding: 20px;
+
+    font-weight: bold;
+	margin-top: 0px;
+}
+navbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+
+#navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+
+.content {
+  padding: 16px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+
+.sticky + .content {
+  padding-top: 60px;
+}
+ADVERTISEMENT
+
+	</style>
+	
+  </head>
+  <body>
+  
+  
+    <div class="sidebar">
+      <h2>Counter</h2>
+      <ul class="nav">
+     <div class="container" style="width:400px;">
+<h3 class="center">Order Details</h3>   <?php include('time.php') ?>
+                <div>  
+                    &nbsp&nbsp <table class="table table-bordered ">  
+                          <tr>  
+                               <th>Item Name</th>  
+                               <th>Quantity</th>  
+                               <th>Price</th>  
+                               <th>Total</th>  
+                               <th>Action</th> 
+                          </tr> 
+ <td></td> 						  
+                          <?php   
+						  
+						  
+						  
+                          if(!empty($_SESSION["shopping_cart"]))  
+                          {  
+                               $total = 0;  
+                             
+							    foreach($_SESSION["shopping_cart"] as $keys => $values)  
+                               {  
+							
+	                        
+                          ?>  
+                          <tr>  
+                               <td><?php echo $values["item_name"]; ?></td>  
+                               <td><?php echo $values["item_quantity"]; ?></td>  
+                               <td>₱ <?php echo $values["item_price"]; ?></td>  
+                               <td>₱ <?php echo number_format($values["item_quantity"] * $values["item_price"], 2); ?></td>  
+                               <td><a href="index.php?action=delete&id=<?php echo $values["item_id"]; ?>"><span class="text-danger">Remove</span></a></td>  
+                          </tr>  
+                          <?php  
+                                   
+                               }  
+                          ?>  
+                          <tr>  
+                               <td align="right">Total</td>  
+                               <td align="le">₱ <?php echo number_format($total, 2); ?></td>  
+							    <td><a href="index.php?action=save2&id=<?php echo $values["item_id"]; ?>"><button class="btn btn-primary text-white" height="80px" > Next</button></td>  
+                               <td></td>  
+                          </tr>  
+                          <?php  
+                          }  
+                          ?>  
+                     </table>  
+                </div>  
+</div>		   
+    </div>
+
+
+
+    <div class="main">
+ <nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+ <h3 align="center" class="text-white">MENU</h3><br />
+
+
+ </div>
+</nav>
+
+  
+       
+
+           <br />  
+		 <div class="row">
+           <div class="container" Style="width: 1100px;" >  
+		       
+               
+                <?php  
+				
+                $query = "SELECT * FROM product ORDER BY id ASC";  
+                $result = mysqli_query($connect, $query);  
+                if(mysqli_num_rows($result) > 0)  
+                {  
+                     while($row = mysqli_fetch_array($result))  
+                     { 
+                ?>  
+				
+                <div class="col-sm-3">  
+                     <form method="post" action="index.php?action=add&id=<?php echo $row["id"]; ?>">  
+                          <div style="border:1px solid #333; background-color:#f1f1f1; border-radius:5px; padding:16px; height:260px" align="center">  
+                             
+							   <img class="center rounded"width="100px" height="90px" src="uploads/<?php echo $row["image"]; ?>"/>
+							   <br />  
+                               <h4 class="text-info"><?php echo $row["Product_Name"]; ?></h4>  
+                               <h4 class="text-danger">₱ <?php echo $row["Price"]; ?></h4>  
+                               <input type="text" name="quantity" class="form-control" value="1" />  
+                               <input type="hidden" name="hidden_name" value="<?php echo $row["Product_Name"]; ?>" />  
+                               <input type="hidden" name="hidden_price" value="<?php echo $row["Price"]; ?>" /> 
+                               <input type="hidden" name="hidden_Quantity" value="<?php echo $row["Quantity"]; ?>" />
+                               <input type="hidden" name="time" value="" />  							   
+							   <?php
+							
+							   if ($row["Quantity"] ==0){echo '<input type="button" name="add_to_cart" style="margin-top:5px;" class="btn btn-warning" value="Out of stock" />';}else
+							   {echo '<input type="submit" name="add_to_cart" style="margin-top:5px;" class="btn btn-success" value="Add to Cart" /> ';}							   
+							   
+							   ?>
+                              
+                          </div>  
+                     </form>  
+                </div> 
+                <?php  
+                     }  
+                }  
+                ?> 
+		
+               
+                
+          </div> 
+	   
+           <br />
+
+</div>			
+      </body>  
+ </html>
